@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  k3s-deployment:
+  - apiVersion: v2
+    appVersion: 0.1.1
+    created: "2023-03-25T12:28:58.580689856Z"
+    description: A Helm chart for Kubernetes
+    digest: ca10cc9cd352bd156b603075d090bac1e875d266fa536ea78b7867037b03ee49
+    name: k3s-deployment
+    type: application
+    urls:
+    - https://github.com/DramatikMan/charts/releases/download/k3s-deployment-0.1.1/k3s-deployment-0.1.1.tgz
+    version: 0.1.1
+generated: "2023-03-25T12:28:58.580694256Z"
