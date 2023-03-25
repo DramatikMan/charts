@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  # ! override required
+  repository: IMAGE-REPOSITORY
+  # ! override required
+  tag: IMAGE-TAG
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: regcred
+
+serviceAccount:
+  create: true
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: traefik
+  hosts:
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix
+  
