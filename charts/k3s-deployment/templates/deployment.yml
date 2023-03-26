@@ -71,8 +71,13 @@ spec:
         {{- range .Values.initContainers }}
         {{- if or .enabled (eq .enabled nil) }}
         - name: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+          {{- if .image }}
           image: "{{ .image.repository }}:{{ .image.tag }}"
-          imagePullPolicy: {{ .image.pullPolicy | default "Always" }}
+          imagePullPolicy: {{ .image.pullPolicy }}
+          {{- else }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: "Always"
+          {{- end }}
           envFrom: {{ include "custom.envFrom" $ | indent 8 }}
           {{- with .command }}
           command: {{ toYaml . | nindent 12 }}
