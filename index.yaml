@@ -2,6 +2,20 @@ apiVersion: v1
 entries:
   k3s-deployment:
   - apiVersion: v2
+    appVersion: 0.1.9
+    created: "2023-03-26T14:54:41.76734998Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.2.4
+    description: A Helm chart for Kubernetes
+    digest: eeda22dbd485300c02539bcfa41d7b95a01e5b0cb75ab992e465ac2783a85cbd
+    name: k3s-deployment
+    type: application
+    urls:
+    - https://github.com/DramatikMan/charts/releases/download/k3s-deployment-0.1.9/k3s-deployment-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
     appVersion: 0.1.8
     created: "2023-03-26T14:37:02.080508177Z"
     dependencies:
@@ -105,4 +119,4 @@ entries:
     urls:
     - https://github.com/DramatikMan/charts/releases/download/k3s-deployment-0.1.1/k3s-deployment-0.1.1.tgz
     version: 0.1.1
-generated: "2023-03-26T14:37:02.080546277Z"
+generated: "2023-03-26T14:54:41.76737978Z"
