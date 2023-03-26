@@ -35,12 +35,11 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          {{- with .livenessProbe }}
-          livenessProbe: {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .readinessProbe }}
-          readinessProbe: {{- toYaml . | nindent 12 }}
-          {{- end }}
+          envFrom: {{ include "custom.envFrom" $ | indent 8 }}
+          livenessProbe: 
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
