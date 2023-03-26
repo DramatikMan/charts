@@ -12,8 +12,7 @@ spec:
   template:
     metadata:
       {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
+      annotations: {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "chart.selectorLabels" . | nindent 8 }}
@@ -57,6 +56,16 @@ spec:
           {{- with .resources }}
           resources: {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if .Values.persistentVolumes }}
+          volumeMounts:
+            {{- range .Values.persistentVolumes }}
+            - name: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+              mountPath: {{ include "common.tplvalues.render" (dict "value" .mountPath "context" $) | quote }}
+              {{- if .subPath }}
+              subPath: {{ include "common.tplvalues.render" (dict "value" .subPath "context" $) }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
       {{- if .Values.initContainers }}
       initContainers:
         {{- range .Values.initContainers }}
@@ -74,6 +83,17 @@ spec:
           {{- with .resources }}
           resources: {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if $.Values.persistentVolumes }}
+          volumeMounts:
+            {{- range $.Values.persistentVolumes }}
+            - name: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+              {{- if or .volumeClaim .existingVolumeClaim }}
+              mountPath: {{ include "common.tplvalues.render" (dict "value" .mountPath "context" $) | quote }}
+              {{- else }}
+              mountPath: /{{ .name }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
         {{- end }}
         {{- end }}
       {{- end }}
@@ -88,4 +108,12 @@ spec:
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.persistentVolumes }}
+      volumes:
+        {{- range .Values.persistentVolumes }}
+        - name: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+          persistentVolumeClaim:
+            claimName: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+        {{- end }}
       {{- end }}

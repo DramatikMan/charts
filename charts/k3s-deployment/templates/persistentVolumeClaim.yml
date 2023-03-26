@@ -1,0 +1,26 @@
+{{- range .Values.persistentVolumes }}
+{{- if .volumeClaim }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .name }}
+spec:
+  accessModes:
+  {{- if .volumeClaim.accessMode }}
+  - {{ .volumeClaim.accessMode }}
+  {{- else }}
+  - ReadWriteOnce
+  {{- end }}
+  resources:
+    requests:
+      {{- if .volumeClaim.size }}
+      storage: {{ .volumeClaim.size }}
+      {{- else }}
+      storage: 1Gi
+      {{- end }}
+  {{- with .volumeClaim.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+---
+{{- end }}
+{{- end }}
