@@ -2,4 +2,5 @@
 
 ### ~ testing ~ ###
 /*.y*ml
+/*.txt
 !/index.y*ml

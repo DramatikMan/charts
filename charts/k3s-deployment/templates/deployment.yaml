@@ -30,18 +30,53 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
+          {{- with .Values.command }}
+          command:
+            {{- range . }}
+            - {{ include "common.tplvalues.render" (dict "value" . "context" $) }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.args }}
+          args:
+            {{- range . }}
+            - {{ include "common.tplvalues.render" (dict "value" . "context" $) }}
+            {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
           envFrom: {{ include "custom.envFrom" $ | indent 8 }}
-          livenessProbe: 
-            {{- toYaml .Values.livenessProbe | nindent 12 }}
-          readinessProbe:
-            {{- toYaml .Values.readinessProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .livenessProbe }}
+          livenessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .readinessProbe }}
+          readinessProbe: {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .resources }}
+          resources: {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- range .Values.initContainers }}
+        {{- if or .enabled (eq .enabled nil) }}
+        - name: {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}
+          image: {{ include "common.tplvalues.render" (dict "value" (required "Image repository is required." .image.repository) "context" $) }}:{{ include "common.tplvalues.render" (dict "value" (required "Image tag is required." .image.tag) "context" $) }}
+          imagePullPolicy: {{ .image.pullPolicy | default "Always" }}
+          envFrom: {{ include "custom.envFrom" $ | indent 8 }}
+          {{- with .command }}
+          command: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .args }}
+          args: {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .resources }}
+          resources: {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- end }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
