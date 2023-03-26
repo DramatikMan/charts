@@ -6,11 +6,7 @@ metadata:
   name: {{ .name }}
 spec:
   accessModes:
-  {{- if .volumeClaim.accessMode }}
-  - {{ .volumeClaim.accessMode }}
-  {{- else }}
   - ReadWriteOnce
-  {{- end }}
   resources:
     requests:
       {{- if .volumeClaim.size }}
