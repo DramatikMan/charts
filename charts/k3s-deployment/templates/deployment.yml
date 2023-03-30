@@ -41,6 +41,7 @@ spec:
           {{- with .args }}
           args: {{ toYaml . | nindent 12 }}
           {{- end }}
+          env: {{ include "custom.env" $ | indent 8 }}
           envFrom: {{ include "custom.envFrom" $ | indent 8 }}
           {{- with .livenessProbe }}
           livenessProbe: {{- toYaml . | nindent 12 }}

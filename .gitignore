@@ -1,6 +1,7 @@
 *.tgz
 
 ### ~ testing ~ ###
-/*.y*ml
+/*.sh
 /*.txt
+/*.y*ml
 !/index.y*ml

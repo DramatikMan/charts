@@ -1,0 +1,11 @@
+{{- range .Values.configMaps }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+data:
+  {{- range .data }}
+    {{ include "common.tplvalues.render" (dict "value" .name "context" $) }}: {{ include "common.tplvalues.render" (dict "value" .value "context" $) | b64enc }}
+  {{- end }}
+---
+{{- end }}
